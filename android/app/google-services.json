@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "782037911215",
+    "project_id": "sight-ai-f61b1",
+    "storage_bucket": "sight-ai-f61b1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782037911215:android:77408cc66e175d0adeb65a",
+        "android_client_info": {
+          "package_name": "com.example.sightai_prototype"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFOp1o1upjtALF41G13qkQ99Ed4zt2VrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
