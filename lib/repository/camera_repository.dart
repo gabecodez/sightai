@@ -12,7 +12,7 @@ class CameraRepository {
     return _service.getCameraController();
   }
 
-  Future<String> takePicture() async {
+  Future<dynamic> takePicture() async {
     return await _service.captureImage();
   }
 }

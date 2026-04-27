@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 
 class CameraService {
   CameraController? controller;
@@ -20,8 +21,15 @@ class CameraService {
     return controller;
   }
 
-  Future<String> captureImage() async {
+  Future<dynamic> captureImage() async {
     final image = await controller!.takePicture();
-    return image.path;
+
+    // Used for photo saving.
+    // On web, return XFile for easier handling, on mobile return path string.
+    if (kIsWeb) {
+      return image; // XFile
+    } else {
+      return image.path; // String
+    }
   }
 }

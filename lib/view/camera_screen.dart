@@ -53,11 +53,14 @@ class CameraScreen extends StatelessWidget {
 
                   const SizedBox(height: 8),
 
+                  // On web, display using the URL, on mobile display using the file path
                   kIsWeb
-                      ? Image.network(
-                          vm.imagePath!,
-                          height: 180,
-                        )
+                      ? (vm.webImageUrl != null
+                          ? Image.network(
+                              vm.webImageUrl!,
+                              height: 180,
+                            )
+                          : const SizedBox())
                       : Image.file(
                           File(vm.imagePath!),
                           height: 180,
