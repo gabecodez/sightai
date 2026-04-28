@@ -13,29 +13,23 @@ class CameraScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => CameraViewModel()..initialize(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Sight AI Camera"),
-        ),
+        appBar: AppBar(title: const Text("Sight AI Camera")),
         body: Consumer<CameraViewModel>(
           builder: (context, vm, child) {
             if (!vm.isInitialized || vm.controller == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             return Column(
               children: [
-                Expanded(
-                  flex: 3,
-                  child: CameraPreview(vm.controller!),
-                ),
+                Expanded(flex: 3, child: CameraPreview(vm.controller!)),
 
                 const SizedBox(height: 12),
 
                 FloatingActionButton(
                   onPressed: () async {
                     await vm.capturePhoto();
+                    await vm.generateDesc();
                   },
                   child: const Icon(Icons.camera_alt),
                 ),
@@ -45,10 +39,7 @@ class CameraScreen extends StatelessWidget {
                 if (vm.imagePath != null) ...[
                   const Text(
                     "Captured Image",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 8),
@@ -56,15 +47,9 @@ class CameraScreen extends StatelessWidget {
                   // On web, display using the URL, on mobile display using the file path
                   kIsWeb
                       ? (vm.webImageUrl != null
-                          ? Image.network(
-                              vm.webImageUrl!,
-                              height: 180,
-                            )
-                          : const SizedBox())
-                      : Image.file(
-                          File(vm.imagePath!),
-                          height: 180,
-                        ),
+                            ? Image.network(vm.webImageUrl!, height: 180)
+                            : const SizedBox())
+                      : Image.file(File(vm.imagePath!), height: 180),
                 ],
               ],
             );
