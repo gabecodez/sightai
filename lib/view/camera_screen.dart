@@ -28,9 +28,9 @@ class CameraScreen extends StatelessWidget {
 
                 FloatingActionButton(
                   onPressed: () async {
-                    await vm.capturePhoto();
-                    await vm.generateDesc();
-                  },
+                  await vm.capturePhoto();
+                  await vm.generateDesc();
+                },
                   child: const Icon(Icons.camera_alt),
                 ),
 
