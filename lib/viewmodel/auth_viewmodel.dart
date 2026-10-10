@@ -1,55 +1,88 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance;
+import '../service/auth_service.dart';
 
-  // Get currently logged-in user
-  User? get currentUser => _auth.currentUser;
+class AuthViewModel extends ChangeNotifier {
+  final AuthService _authService = AuthService();
 
-  // REGISTER NEW USER
-  Future<void> register({
+  bool isLoading = false;
+  String? errorMessage;
+
+  User? get currentUser => _authService.currentUser;
+
+  // REGISTER
+  Future<bool> register({
     required String name,
     required String email,
     required String password,
   }) async {
-    final credential =
-        await _auth.createUserWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
-    );
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
 
-    final user = credential.user;
+    try {
+      await _authService.register(
+        name: name,
+        email: email,
+        password: password,
+      );
 
-    if (user != null) {
-      await user.updateDisplayName(name.trim());
-
-      // Save user information in Firestore
-      await _firestore.collection('users').doc(user.uid).set({
-        'uid': user.uid,
-        'name': name.trim(),
-        'email': email.trim(),
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      errorMessage = e.message ?? 'Registration failed.';
+    } catch (e) {
+      errorMessage = 'Registration failed. Please try again.';
+      debugPrint('Registration error: $e');
     }
+
+    isLoading = false;
+    notifyListeners();
+    return false;
   }
 
-  // LOGIN EXISTING USER
-  Future<void> login({
+  // LOGIN
+  Future<bool> login({
     required String email,
     required String password,
   }) async {
-    await _auth.signInWithEmailAndPassword(
-      email: email.trim(),
-      password: password,
-    );
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _authService.login(
+        email: email,
+        password: password,
+      );
+
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      errorMessage = e.message ?? 'Login failed.';
+    } catch (e) {
+      errorMessage = 'Login failed. Please try again.';
+      debugPrint('Login error: $e');
+    }
+
+    isLoading = false;
+    notifyListeners();
+    return false;
   }
 
-  // LOGOUT USER
+  // LOGOUT
   Future<void> logout() async {
-    await _auth.signOut();
+    await _authService.logout();
+    notifyListeners();
+  }
+
+  // CLEAR ERROR
+  void clearError() {
+    errorMessage = null;
+    notifyListeners();
   }
 }
