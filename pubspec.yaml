@@ -37,6 +37,7 @@ dependencies:
     firebase_core: ^4.7.0
     firebase_ai: ^3.11.0
     image_gallery_saver_plus: ^5.1.1
+    image_picker: ^1.1.2
     web: ^1.1.1
 
 dev_dependencies:
