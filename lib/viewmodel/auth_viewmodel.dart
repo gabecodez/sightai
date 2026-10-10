@@ -1,107 +1,55 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../service/auth_service.dart';
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance;
 
-class AuthViewModel extends ChangeNotifier {
-  final AuthService _authService = AuthService();
+  // Get currently logged-in user
+  User? get currentUser => _auth.currentUser;
 
-  bool isLoading = false;
-  String? errorMessage;
-
-  User? get currentUser => _authService.currentUser;
-
-  // REGISTER
-  Future<bool> register({
+  // REGISTER NEW USER
+  Future<void> register({
     required String name,
     required String email,
     required String password,
   }) async {
-    isLoading = true;
-    errorMessage = null;
-    notifyListeners();
+    final credential =
+        await _auth.createUserWithEmailAndPassword(
+      email: email.trim(),
+      password: password,
+    );
 
-    try {
-      await _authService.register(
-        name: name,
-        email: email,
-        password: password,
-      );
+    final user = credential.user;
 
-      isLoading = false;
-      notifyListeners();
+    if (user != null) {
+      await user.updateDisplayName(name.trim());
 
-      return true;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        errorMessage = 'This email is already registered.';
-      } else if (e.code == 'weak-password') {
-        errorMessage = 'Password must be at least 6 characters.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Please enter a valid email address.';
-      } else {
-        errorMessage = e.message ?? 'Registration failed.';
-      }
-    } catch (e) {
-      errorMessage = 'Registration failed. Check Firebase/Firestore setup.';
-      debugPrint('Registration error: $e');
+      // Save user information in Firestore
+      await _firestore.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'name': name.trim(),
+        'email': email.trim(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
     }
-
-    isLoading = false;
-    notifyListeners();
-
-    return false;
   }
 
-  // LOGIN
-  Future<bool> login({
+  // LOGIN EXISTING USER
+  Future<void> login({
     required String email,
     required String password,
   }) async {
-    isLoading = true;
-    errorMessage = null;
-    notifyListeners();
-
-    try {
-      await _authService.login(
-        email: email,
-        password: password,
-      );
-
-      isLoading = false;
-      notifyListeners();
-
-      return true;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found' ||
-          e.code == 'wrong-password' ||
-          e.code == 'invalid-credential') {
-        errorMessage = 'Incorrect email or password.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Please enter a valid email address.';
-      } else {
-        errorMessage = e.message ?? 'Login failed.';
-      }
-    } catch (e) {
-      errorMessage = 'Login failed. Please try again.';
-      debugPrint('Login error: $e');
-    }
-
-    isLoading = false;
-    notifyListeners();
-
-    return false;
+    await _auth.signInWithEmailAndPassword(
+      email: email.trim(),
+      password: password,
+    );
   }
 
-  // LOGOUT
+  // LOGOUT USER
   Future<void> logout() async {
-    await _authService.logout();
-    notifyListeners();
-  }
-
-  // CLEAR ERROR MESSAGE
-  void clearError() {
-    errorMessage = null;
-    notifyListeners();
+    await _auth.signOut();
   }
 }
