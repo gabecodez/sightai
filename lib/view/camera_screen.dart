@@ -17,6 +17,7 @@ class CameraScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Sight AI Camera'),
+          centerTitle: true,
           actions: [
             IconButton(
               tooltip: 'Logout',
@@ -37,6 +38,7 @@ class CameraScreen extends StatelessWidget {
             ),
           ],
         ),
+
         body: Consumer<CameraViewModel>(
           builder: (context, vm, child) {
             if (!vm.isInitialized || vm.controller == null) {
@@ -45,117 +47,161 @@ class CameraScreen extends StatelessWidget {
               );
             }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: vm.imageBytes != null
-                      ? Center(
-                          child: Image.memory(
-                            vm.imageBytes!,
-                            fit: BoxFit.contain,
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final double cameraWidth =
+                    constraints.maxWidth > 500
+                        ? 450
+                        : constraints.maxWidth * 0.9;
+
+                return Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // LIVE CAMERA OR CAPTURED PHOTO
+                        Center(
+                          child: vm.imageBytes != null
+                              ? Image.memory(
+                                  vm.imageBytes!,
+                                  width: cameraWidth,
+                                  fit: BoxFit.contain,
+                                )
+                              : SizedBox(
+                                  width: cameraWidth,
+                                  child: AspectRatio(
+                                    aspectRatio: vm
+                                        .controller!
+                                        .value
+                                        .aspectRatio,
+                                    child: CameraPreview(
+                                      vm.controller!,
+                                    ),
+                                  ),
+                                ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // BEFORE TAKING A PHOTO
+                        if (vm.imageBytes == null) ...[
+                          ElevatedButton.icon(
+                            onPressed: vm.isBusy
+                                ? null
+                                : () async {
+                                    try {
+                                      await vm.capturePhoto();
+                                    } catch (e) {
+                                      if (!context.mounted) return;
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Camera error: $e',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            icon: const Icon(Icons.camera_alt),
+                            label: const Text('Take Picture'),
                           ),
-                        )
-                      : CameraPreview(vm.controller!),
-                ),
 
-                const SizedBox(height: 12),
+                          const SizedBox(height: 12),
 
-                if (vm.imageBytes == null) ...[
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      try {
-                        await vm.capturePhoto();
-                      } catch (e) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Camera error: $e',
-                            ),
+                          ElevatedButton.icon(
+                            onPressed: vm.isBusy
+                                ? null
+                                : () async {
+                                    try {
+                                      await vm.selectFromGallery();
+                                    } catch (e) {
+                                      if (!context.mounted) return;
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Gallery error: $e',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            icon: const Icon(Icons.photo_library),
+                            label: const Text('Gallery'),
                           ),
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.camera_alt),
-                    label: const Text('Take Picture'),
-                  ),
+                        ]
 
-                  const SizedBox(height: 8),
+                        // AFTER TAKING A PHOTO
+                        else ...[
+                          ElevatedButton.icon(
+                            onPressed: vm.isBusy
+                                ? null
+                                : () async {
+                                    try {
+                                      await vm.clearImage();
+                                    } catch (e) {
+                                      if (!context.mounted) return;
 
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      try {
-                        await vm.selectFromGallery();
-                      } catch (e) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Gallery error: $e',
-                            ),
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Camera restart error: $e',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            icon: const Icon(Icons.refresh),
+                            label: const Text('Choose Again'),
                           ),
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.photo_library),
-                    label: const Text('Gallery'),
-                  ),
-                ] else ...[
-                  const Text(
-                    'Selected Image',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+
+                          const SizedBox(height: 12),
+
+                          ElevatedButton.icon(
+                            onPressed: vm.isBusy
+                                ? null
+                                : () async {
+                                    try {
+                                      await vm.generateDesc();
+
+                                      if (!context.mounted) return;
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'AI description generated. Check console.',
+                                          ),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      if (!context.mounted) return;
+
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'AI error: $e',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            icon: const Icon(Icons.check_circle),
+                            label: const Text('Confirm Image'),
+                          ),
+                        ],
+
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
-
-                  const SizedBox(height: 8),
-
-                  ElevatedButton.icon(
-                    onPressed: vm.clearImage,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Choose Again'),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      try {
-                        await vm.generateDesc();
-
-                        if (!context.mounted) return;
-
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'AI description generated. Check the console.',
-                            ),
-                          ),
-                        );
-                      } catch (e) {
-                        if (!context.mounted) return;
-
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'AI error: $e',
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.check_circle),
-                    label: const Text('Confirm Image'),
-                  ),
-                ],
-
-                const SizedBox(height: 24),
-              ],
+                );
+              },
             );
           },
         ),
