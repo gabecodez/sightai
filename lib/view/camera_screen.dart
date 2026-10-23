@@ -6,6 +6,8 @@ import 'package:camera/camera.dart';
 import '../viewmodel/camera_viewmodel.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import 'login_screen.dart';
+import 'blind_mode_screen.dart';
+import 'delete_account_screen.dart';
 
 class CameraScreen extends StatelessWidget {
   const CameraScreen({super.key});
@@ -19,6 +21,21 @@ class CameraScreen extends StatelessWidget {
           title: const Text('Sight AI Camera'),
           centerTitle: true,
           actions: [
+            // DELETE ACCOUNT
+            IconButton(
+              tooltip: 'Delete Account',
+              icon: const Icon(Icons.delete_forever_outlined),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const DeleteAccountScreen(),
+                  ),
+                );
+              },
+            ),
+
+            // LOGOUT - EXISTING TEAMMATE CODE
             IconButton(
               tooltip: 'Logout',
               icon: const Icon(Icons.logout),
@@ -59,6 +76,28 @@ class CameraScreen extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // OPEN BLIND MODE
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ChangeNotifierProvider.value(
+                                  value: vm,
+                                  child: const BlindModeScreen(),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.accessibility_new,
+                          ),
+                          label: const Text('Open Blind Mode'),
+                        ),
+
+                        const SizedBox(height: 20),
+
                         // LIVE CAMERA OR CAPTURED PHOTO
                         Center(
                           child: vm.imageBytes != null
