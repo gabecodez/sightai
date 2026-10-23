@@ -26,3 +26,6 @@ jobs:
 
       - name: Run camera tests
         run: flutter test test/camera_viewmodel_test.dart
+
+      - name: Run Sprint 4 tests
+        run: flutter test test/sprint4_test.dart
