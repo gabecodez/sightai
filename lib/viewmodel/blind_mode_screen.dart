@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
 
 import '../viewmodel/camera_viewmodel.dart';
 import '../service/blind_mode_service.dart';
@@ -29,7 +28,7 @@ class _BlindModeContent extends StatefulWidget {
 class _BlindModeContentState extends State<_BlindModeContent> {
   final BlindModeService _voice = BlindModeService();
 
-  bool _listening = false;
+  final bool _listening = false;
   String _status = 'Voice assistant ready';
   String _lastAnswer = '';
 
@@ -40,10 +39,10 @@ class _BlindModeContentState extends State<_BlindModeContent> {
   }
 
   Future<void> _enableVoice() async {
-    await _voice.enableBlindMode();
+    //await _voice.enableBlindMode();
   }
 
-  Future<void> _listen() async {
+  /*Future<void> _listen() async {
     if (_listening) return;
 
     final started = await _voice.startListening((command) {
@@ -59,9 +58,9 @@ class _BlindModeContentState extends State<_BlindModeContent> {
       _listening = started;
       _status = started ? 'Listening...' : 'Microphone unavailable';
     });
-  }
+  }*/
 
-  Future<void> _handleCommand(String command) async {
+  /*Future<void> _handleCommand(String command) async {
     final vm = context.read<CameraViewModel>();
 
     debugPrint('Voice Command: $command');
@@ -91,7 +90,7 @@ class _BlindModeContentState extends State<_BlindModeContent> {
       debugPrint('Blind Mode Error: $e');
       await _respond('Sorry, something went wrong.');
     }
-  }
+  }*/
 
   Future<void> _respond(String message) async {
     debugPrint('Sight AI Response: $message');
@@ -159,7 +158,7 @@ class _BlindModeContentState extends State<_BlindModeContent> {
 
                   const SizedBox(height: 20),
 
-                  ElevatedButton.icon(
+                  /*ElevatedButton.icon(
                     onPressed: _listening || vm.isBusy
                         ? null
                         : _listen,
@@ -169,7 +168,7 @@ class _BlindModeContentState extends State<_BlindModeContent> {
                           ? 'Listening...'
                           : 'Start Voice Command',
                     ),
-                  ),
+                  ),*/
 
                   const SizedBox(height: 20),
 

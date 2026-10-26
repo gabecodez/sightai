@@ -30,18 +30,19 @@ environment:
 dependencies:
     flutter:
         sdk: flutter
-    camera: ^0.11.1
+    camera: ^0.12.1
     provider: ^6.0.5
     google_vision: ^2.0.0+10
     flutter_dotenv: ^6.0.1
-    firebase_core: ^4.7.0
-    firebase_ai: ^3.11.0
-    firebase_auth: ^6.4.0
-    cloud_firestore: ^6.1.3
+    firebase_core: ^5.1.0
+    firebase_ai: ^5.1.0
+    firebase_auth: ^7.0.1
+    cloud_firestore: ^7.1.0
     image_gallery_saver_plus: ^5.1.1
     image_picker: ^1.1.2
     web: ^1.1.1
     flutter_tts: ^4.2.5
+    firebase_app_check: ^0.5.1
 
 dev_dependencies:
     flutter_test:
