@@ -39,19 +39,17 @@
 
 .brand-icon,
 .mini-brand {
-  display: grid;
-  place-items: center;
-  color: #ffffff;
-  background: #2864e8;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 800;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  flex-shrink: 0;
+  background: transparent;
+  border-radius: 11px;
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  font-size: 19px;
+  width: 42px;
+  height: 42px;
 }
 
 .brand-accent {
@@ -809,20 +807,13 @@
 .mission-mark {
   position: relative;
   z-index: 1;
-  display: grid;
-  place-items: center;
+  display: block;
   flex-shrink: 0;
-  width: 105px;
-  height: 105px;
-  border: 1px solid #d9e5ff;
+  width: 125px;
+  height: 125px;
+  object-fit: contain;
+  object-position: center;
   border-radius: 30px;
-  color: #2864e8;
-  background: #ffffff;
-  box-shadow: 0 14px 35px #2864e80e;
-  font-family: 'Manrope', sans-serif;
-  font-size: 37px;
-  font-weight: 800;
-  letter-spacing: -3px;
 }
 
 .mission-mark span {
@@ -888,10 +879,11 @@
 }
 
 .footer-brand .brand-icon {
-  width: 31px;
-  height: 31px;
+  width: 38px;
+  height: 38px;
+  border-radius: 0;
+  font-size: initial;
   border-radius: 9px;
-  font-size: 16px;
 }
 
 .footer-inner > p,
@@ -1066,14 +1058,8 @@
   }
 
   .mission-mark {
-    width: 72px;
-    height: 72px;
-    border-radius: 21px;
-    font-size: 28px;
-  }
-
-  .mission-mark span {
-    font-size: 14px;
+    width: 85px;
+    height: 85px;
   }
 
   .mission-copy h2 {

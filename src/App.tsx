@@ -30,7 +30,7 @@ function App() {
     <div className="site-shell">
       <header className="navbar">
         <a className="brand" href="#home" aria-label="SightAI home">
-          <span className="brand-icon">S</span>
+          <img className="brand-icon" src="/sightai/sightai-logo.png" alt="" />
           <span>Sight<span className="brand-accent">AI</span></span>
         </a>
 
@@ -91,7 +91,7 @@ function App() {
             <div className="phone">
               <div className="phone-top">
                 <span className="phone-brand">
-                  <span className="mini-brand">S</span> SightAI
+                  <img className="mini-brand" src="/sightai/sightai-logo.png" alt="" />
                 </span>
                 <span className="phone-menu">•••</span>
               </div>
@@ -235,7 +235,7 @@ function App() {
 
         <section className="mission section-container" id="mission">
           <div className="mission-card">
-            <div className="mission-mark">S<span>AI</span></div>
+            <img className="mission-mark" src="/sightai/sightai-logo.png" alt="SightAI logo" />
             <div className="mission-copy">
               <span className="section-kicker">OUR MISSION</span>
               <h2>Technology should open doors, not create barriers.</h2>
@@ -259,7 +259,7 @@ function App() {
       <footer className="footer">
         <div className="section-container footer-inner">
           <a className="brand footer-brand" href="#home">
-            <span className="brand-icon">S</span>
+            <img className="brand-icon" src="/sightai/sightai-logo.png" alt="" />
             <span>Sight<span className="brand-accent">AI</span></span>
           </a>
           <p>Designed with accessibility in mind.</p>
