@@ -17,7 +17,7 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
   final BlindModeService _audio = BlindModeService();
   final BlindModeAIService _ai = BlindModeAIService();
   bool _working = false;
-  String _status = 'Blind Mode ready';
+  String _status = 'High Contrast Mode ready';
   String _description = '';
 
   @override
@@ -27,11 +27,11 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
       try {
         await _audio.initialize();
         if (mounted) {
-          await _audio.speak('Blind Mode enabled. Use the large buttons to '
+          await _audio.speak('High Contrast enabled. Use the large buttons to '
               'take a picture or choose from gallery, then describe the image.');
         }
       } catch (error) {
-        debugPrint('Blind Mode speech setup error: $error');
+        debugPrint('High Contrast speech setup error: $error');
       }
     });
   }
@@ -43,7 +43,7 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
       await _audio.feedback();
       await _audio.speak(message);
     } catch (error) {
-      debugPrint('Blind Mode announcement error: $error');
+      debugPrint('High Contrast announcement error: $error');
     }
   }
 
@@ -54,7 +54,7 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
     try {
       await action(vm);
     } catch (error) {
-      debugPrint('Blind Mode action error: $error');
+      debugPrint('High Contrast action error: $error');
       await _announce('Sorry, that action could not be completed.');
     } finally {
       if (mounted) setState(() => _working = false);
@@ -128,7 +128,7 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Blind Mode'),
+        title: const Text('High Contrast Mode'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),

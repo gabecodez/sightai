@@ -42,48 +42,45 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDgQFN7nut78AG3SDTG1foz12X-soNqRrY',
-    appId: '1:782037911215:web:1ff073e7ce0a057ddeb65a',
+    appId: '1:782037911215:web:8537c208ece54496deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     authDomain: 'sight-ai-f61b1.firebaseapp.com',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
-    measurementId: 'G-2D052EQR5Z',
+    measurementId: 'G-P820CHNFX1',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAFOp1o1upjtALF41G13qkQ99Ed4zt2VrE',
-    appId: '1:782037911215:android:77408cc66e175d0adeb65a',
+    appId: '1:782037911215:android:2d7b34849b38c256deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBaIX5LDd_sUs6ETeM9blgIOxmHYa5v9To',
-    appId: '1:782037911215:ios:0413572e28f376eadeb65a',
+    appId: '1:782037911215:ios:25a226ddce986a00deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
-    iosBundleId: 'com.example.sightaiPrototype',
+    iosBundleId: 'com.gabecodez.sightai',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBaIX5LDd_sUs6ETeM9blgIOxmHYa5v9To',
-    appId: '1:782037911215:ios:0413572e28f376eadeb65a',
+    appId: '1:782037911215:ios:25a226ddce986a00deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
-    iosBundleId: 'com.example.sightaiPrototype',
+    iosBundleId: 'com.gabecodez.sightai',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyDgQFN7nut78AG3SDTG1foz12X-soNqRrY',
-    appId: '1:782037911215:web:9d5fd7ab3b49c168deb65a',
+    appId: '1:782037911215:web:6354b6049a34a0c8deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     authDomain: 'sight-ai-f61b1.firebaseapp.com',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
-    measurementId: 'G-KGHVMEB2TV',
+    measurementId: 'G-5MBKBV268S',
   );
-
 }

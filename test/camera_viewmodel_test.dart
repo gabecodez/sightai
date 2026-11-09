@@ -1,6 +1,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sightai_prototype/viewmodel/camera_viewmodel.dart';
+import 'package:sightai/viewmodel/camera_viewmodel.dart';
 
 void main() {
   group('Sight AI Camera Tests', () {

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sightai_prototype/view/delete_account_screen.dart';
+import 'package:sightai/view/delete_account_screen.dart';
 
 void main() {
   group('Sight AI Sprint 4 Tests', () {

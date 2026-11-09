@@ -14,7 +14,7 @@ class BlindModeService {
   }
 
   Future<void> speak(String message) async {
-    debugPrint('Blind Mode audio: $message');
+    debugPrint('High Contrast Audio audio: $message');
     await _tts.stop();
     await _tts.speak(message);
   }
