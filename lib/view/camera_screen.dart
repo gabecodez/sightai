@@ -40,25 +40,55 @@ class _CameraScreenState extends State<CameraScreen> {
                 const SettingsScreen(),
               ],
             ),
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
+            bottomNavigationBar: Consumer<CameraViewModel>(
+              builder: (context, vm, child) {
+                return BottomAppBar(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildNavigationItem(
+                        icon: Icons.camera_alt,
+                        label: 'Camera',
+                        selected: _selectedIndex == 0,
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 0;
+                          });
+                        },
+                      ),
+                      _buildNavigationItem(
+                        icon: Icons.photo_library,
+                        label: 'Gallery',
+                        onTap: vm.isBusy
+                            ? null
+                            : () async {
+                                try {
+                                  await vm.selectFromGallery();
+                                } catch (e) {
+                                  if (!context.mounted) return;
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Gallery error: $e'),
+                                    ),
+                                  );
+                                }
+                              },
+                      ),
+                      _buildNavigationItem(
+                        icon: Icons.settings,
+                        label: 'Settings',
+                        selected: _selectedIndex == 1,
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = 1;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                );
               },
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.camera_alt_outlined),
-                  selectedIcon: Icon(Icons.camera_alt),
-                  label: 'Camera',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings_outlined),
-                  selectedIcon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
             ),
           );
         },
@@ -128,27 +158,6 @@ class _CameraScreenState extends State<CameraScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: vm.isBusy
-                                    ? null
-                                    : () async {
-                                        try {
-                                          await vm.selectFromGallery();
-                                        } catch (e) {
-                                          if (!context.mounted) return;
-
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text('Gallery error: $e'),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                icon: const Icon(Icons.photo_library),
-                                label: const Text('Gallery'),
-                              ),
-                            ),
                             Expanded(
                               child: ElevatedButton.icon(
                                 onPressed: vm.isBusy
@@ -237,6 +246,41 @@ class _CameraScreenState extends State<CameraScreen> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildNavigationItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback? onTap,
+    bool selected = false,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = selected
+        ? colorScheme.primary
+        : colorScheme.onSurfaceVariant;
+
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 22),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  height: 1,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

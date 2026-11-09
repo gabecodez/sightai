@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../viewmodel/auth_viewmodel.dart';
+import '../viewmodel/theme_viewmodel.dart';
 import 'login_screen.dart';
 import 'delete_account_screen.dart';
 
@@ -11,9 +12,51 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeViewModel = context.watch<ThemeViewModel>();
+
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
+        const Text(
+          'Appearance',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        RadioGroup<ThemeMode>(
+          groupValue: themeViewModel.themeMode,
+          onChanged: (mode) {
+            if (mode != null) {
+              context.read<ThemeViewModel>().setThemeMode(mode);
+            }
+          },
+          child: const Column(
+            children: [
+              RadioListTile<ThemeMode>(
+                value: ThemeMode.light,
+                title: Text('Light'),
+                subtitle: Text('Use the light theme'),
+              ),
+              RadioListTile<ThemeMode>(
+                value: ThemeMode.dark,
+                title: Text('Dark'),
+                subtitle: Text('Use the dark theme'),
+              ),
+              RadioListTile<ThemeMode>(
+                value: ThemeMode.system,
+                title: Text('System Default'),
+                subtitle: Text('Follow your device settings'),
+              ),
+            ],
+          ),
+        ),
+
+        const Divider(),
+
         const Text(
           'Account',
           style: TextStyle(
