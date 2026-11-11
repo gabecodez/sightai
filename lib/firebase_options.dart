@@ -52,26 +52,26 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAFOp1o1upjtALF41G13qkQ99Ed4zt2VrE',
-    appId: '1:782037911215:android:2d7b34849b38c256deb65a',
+    appId: '1:782037911215:android:f199902e4c9343aedeb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBaIX5LDd_sUs6ETeM9blgIOxmHYa5v9To',
-    appId: '1:782037911215:ios:25a226ddce986a00deb65a',
+    appId: '1:782037911215:ios:8f6a8d14a1741ac6deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
-    iosBundleId: 'com.gabecodez.sightai',
+    iosBundleId: 'dev.sightai.sightai',
   );
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBaIX5LDd_sUs6ETeM9blgIOxmHYa5v9To',
-    appId: '1:782037911215:ios:25a226ddce986a00deb65a',
+    appId: '1:782037911215:ios:8f6a8d14a1741ac6deb65a',
     messagingSenderId: '782037911215',
     projectId: 'sight-ai-f61b1',
     storageBucket: 'sight-ai-f61b1.firebasestorage.app',
-    iosBundleId: 'com.gabecodez.sightai',
+    iosBundleId: 'dev.sightai.sightai',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

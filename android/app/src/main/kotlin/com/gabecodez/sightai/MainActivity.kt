@@ -1,4 +1,4 @@
-package com.gabecodez.sightai
+package dev.sightai.sightai
 
 import io.flutter.embedding.android.FlutterActivity
 

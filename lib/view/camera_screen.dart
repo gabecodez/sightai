@@ -4,10 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
 
 import '../viewmodel/camera_viewmodel.dart';
-import '../viewmodel/auth_viewmodel.dart';
-import 'login_screen.dart';
 import 'blind_mode_screen.dart';
-import 'delete_account_screen.dart';
 import 'settings_screen.dart';
 
 class CameraScreen extends StatefulWidget {

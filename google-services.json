@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:782037911215:android:2d7b34849b38c256deb65a",
         "android_client_info": {
-          "package_name": "com.gabecodez.sightai"
+          "package_name": "dev.sightai.sightai"
         }
       },
       "oauth_client": [],

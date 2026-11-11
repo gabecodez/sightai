@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.gabecodez" "\0"
-            VALUE "FileDescription", "sightai_prototype" "\0"
+            VALUE "CompanyName", "dev.sightai" "\0"
+            VALUE "FileDescription", "sightai" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "sightai_prototype" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.gabecodez. All rights reserved." "\0"
-            VALUE "OriginalFilename", "sightai_prototype.exe" "\0"
-            VALUE "ProductName", "sightai_prototype" "\0"
+            VALUE "InternalName", "sightai" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 dev.sightai. All rights reserved." "\0"
+            VALUE "OriginalFilename", "sightai.exe" "\0"
+            VALUE "ProductName", "sightai" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
