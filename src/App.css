@@ -1259,6 +1259,12 @@
   color: #a3b0c5;
 }
 
+.site-shell[data-theme='dark'] .brand-icon,
+.site-shell[data-theme='dark'] .mini-brand,
+.site-shell[data-theme='dark'] .mission-mark {
+  filter: brightness(0) invert(1);
+}
+
 .site-shell[data-theme='dark'] .muted-heading {
   color: #8190a8;
 }
