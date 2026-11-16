@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from 'react'
 import './App.css'
 
 const features = [
@@ -26,8 +27,22 @@ const features = [
 ]
 
 function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const savedTheme = localStorage.getItem('sightai-theme')
+    return savedTheme === 'dark' ? 'dark' : 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.style.colorScheme = theme
+    localStorage.setItem('sightai-theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))
+  }
+
   return (
-    <div className="site-shell">
+    <div className="site-shell" data-theme={theme}>
       <header className="navbar">
         <a className="brand" href="#home" aria-label="SightAI home">
           <img className="brand-icon" src={`${import.meta.env.BASE_URL}sightai-logo.png`} alt="" />
@@ -40,9 +55,41 @@ function App() {
           <a href="#mission">Our mission</a>
         </nav>
 
-        <a className="nav-cta" href="#features">
-          Discover SightAI <span aria-hidden="true">↗</span>
-        </a>
+        <div className="nav-actions">
+          <a
+            className="github-link"
+            href="https://github.com/gabecodez/sightai"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="SightAI on GitHub (opens in a new tab)"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.29-1.24-1.63-1.24-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.74 2.05 3.63 1.46.1-.72.39-1.21.7-1.49-2.48-.28-5.09-1.24-5.09-5.52 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.05-1.14 3.05-1.14.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.29-2.61 5.23-5.1 5.51.4.35.75 1.02.75 2.06v3.06c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z" />
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {theme === 'light' ? (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42" />
+                <circle cx="12" cy="12" r="4" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z" />
+              </svg>
+            )}
+          </button>
+          <a className="nav-cta" href="#features">
+            Discover SightAI <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </header>
 
       <main>
