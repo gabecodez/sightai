@@ -2,7 +2,7 @@ name: sightai
 description: "A tool for helping people with visual impairments identify scenes when other accessibility tools are not available through the integration of artificial intelligence"
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+4
+version: 1.1.0+3
 
 environment:
     sdk: ^3.11.4
