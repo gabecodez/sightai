@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -23,11 +22,7 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _authService.register(
-        name: name,
-        email: email,
-        password: password,
-      );
+      await _authService.register(name: name, email: email, password: password);
 
       isLoading = false;
       notifyListeners();
@@ -45,19 +40,13 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   // LOGIN
-  Future<bool> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<bool> login({required String email, required String password}) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
 
     try {
-      await _authService.login(
-        email: email,
-        password: password,
-      );
+      await _authService.login(email: email, password: password);
 
       isLoading = false;
       notifyListeners();

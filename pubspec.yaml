@@ -25,6 +25,7 @@ dependencies:
     speech_to_text: ^7.0.0
     firebase_app_check: ^0.5.1
     shared_preferences: ^2.5.6
+    image: ^4.13.1
 
 dev_dependencies:
     flutter_test:

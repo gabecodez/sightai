@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,10 +32,7 @@ class ThemeViewModel extends ChangeNotifier {
 
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString(
-      _themeKey,
-      mode.name,
-    );
+    await prefs.setString(_themeKey, mode.name);
 
     notifyListeners();
   }

@@ -15,23 +15,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(
-      const Duration(seconds: 3),
-      () {
-        if (!mounted) return;
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
 
-        final user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => user == null
-                ? const LoginScreen()
-                : const OnboardingScreen(),
-          ),
-        );
-      },
-    );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              user == null ? const LoginScreen() : const OnboardingScreen(),
+        ),
+      );
+    });
   }
 
   @override

@@ -74,7 +74,10 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
 
       // This app creates the profile at users/{uid} on registration.
       // Remove it while still authenticated so user-scoped rules can apply.
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .delete();
       await user.delete();
 
       debugPrint('Sight AI account deletion completed.');
@@ -88,8 +91,10 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
       if (!mounted) return;
       setState(() {
         _error = switch (e.code) {
-          'wrong-password' || 'invalid-credential' => 'Incorrect password. Try again.',
-          'requires-recent-login' => 'Please sign out, sign in again, and retry.',
+          'wrong-password' ||
+          'invalid-credential' => 'Incorrect password. Try again.',
+          'requires-recent-login' =>
+            'Please sign out, sign in again, and retry.',
           'too-many-requests' => 'Too many attempts. Please try again later.',
           _ => 'Could not delete account: ${e.message ?? e.code}',
         };
@@ -97,11 +102,17 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
     } on FirebaseException catch (e) {
       debugPrint('Account deletion Firestore error: ${e.code}');
       if (!mounted) return;
-      setState(() => _error = 'Could not remove your profile: ${e.message ?? e.code}. Account deletion was not completed.');
+      setState(
+        () => _error =
+            'Could not remove your profile: ${e.message ?? e.code}. Account deletion was not completed.',
+      );
     } catch (e) {
       debugPrint('Account deletion error: $e');
       if (!mounted) return;
-      setState(() => _error = 'Account deletion could not be completed. Please try again.');
+      setState(
+        () => _error =
+            'Account deletion could not be completed. Please try again.',
+      );
     } finally {
       if (mounted) setState(() => _isDeleting = false);
     }
@@ -118,7 +129,11 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 64),
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.red,
+                  size: 64,
+                ),
                 const SizedBox(height: 16),
                 const Text(
                   'Delete your Sight AI account',
@@ -146,16 +161,27 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                   const SizedBox(height: 16),
                   Semantics(
                     liveRegion: true,
-                    child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                    child: Text(
+                      _error!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   ),
                 ],
                 const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _isDeleting ? null : _deleteAccount,
                   icon: _isDeleting
-                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
                       : const Icon(Icons.delete_forever),
-                  label: Text(_isDeleting ? 'Deleting account...' : 'Delete Account Permanently'),
+                  label: Text(
+                    _isDeleting
+                        ? 'Deleting account...'
+                        : 'Delete Account Permanently',
+                  ),
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.red.shade700,
                     minimumSize: const Size.fromHeight(56),

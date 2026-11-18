@@ -33,8 +33,10 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
         _voiceReady = await _voice.initialize();
         if (mounted) setState(() {});
         if (mounted) {
-          await _audio.speak('High Contrast enabled. Use the large buttons to '
-              'take a picture or choose from gallery, then describe the image.');
+          await _audio.speak(
+            'High Contrast enabled. Use the large buttons to '
+            'take a picture or choose from gallery, then describe the image.',
+          );
         }
       } catch (error) {
         debugPrint('High Contrast speech setup error: $error');
@@ -94,7 +96,9 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
     }
     await _announce('Analyzing image. Please wait.');
     _conversation.setImage(bytes);
-    final result = await _conversation.ask('Describe this image clearly for a visually impaired person.');
+    final result = await _conversation.ask(
+      'Describe this image clearly for a visually impaired person.',
+    );
     if (!mounted) return;
     setState(() => _description = result);
     await _announce(result);
@@ -111,7 +115,9 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
   Future<void> _startVoice() async {
     if (!_voiceReady || _voiceActive) return;
     setState(() => _voiceActive = true);
-    await _voice.speak('Voice conversation started. What would you like to know?');
+    await _voice.speak(
+      'Voice conversation started. What would you like to know?',
+    );
     await _listenAgain();
   }
 
@@ -122,32 +128,45 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
       await _handleVoiceCommand(command);
     });
     if (!started && mounted) {
-      setState(() => _status = 'Microphone unavailable. Tap Start Voice again.');
+      setState(
+        () => _status = 'Microphone unavailable. Tap Start Voice again.',
+      );
       _voiceActive = false;
     }
   }
 
   Future<void> _handleVoiceCommand(String command) async {
     if (!mounted || !_voiceActive || _working) return;
-    setState(() { _working = true; _status = 'Processing: $command'; });
+    setState(() {
+      _working = true;
+      _status = 'Processing: $command';
+    });
     String answer;
     try {
       final vm = context.read<CameraViewModel>();
       final cmd = command.toLowerCase();
-      if (cmd.contains('stop listening') || cmd == 'stop' ||
+      if (cmd.contains('stop listening') ||
+          cmd == 'stop' ||
           cmd.contains('goodbye')) {
-        setState(() { _voiceActive = false; _status = 'Voice stopped'; });
+        setState(() {
+          _voiceActive = false;
+          _status = 'Voice stopped';
+        });
         await _voice.speak('Voice conversation stopped.');
         return;
       } else if (cmd.contains('repeat')) {
         answer = _description.isEmpty ? 'Nothing to repeat yet.' : _description;
-      } else if (cmd.contains('take picture') || cmd.contains('take photo') ||
-          cmd.contains('what is in front') || cmd.contains('describe surroundings') ||
+      } else if (cmd.contains('take picture') ||
+          cmd.contains('take photo') ||
+          cmd.contains('what is in front') ||
+          cmd.contains('describe surroundings') ||
           cmd.contains('new picture')) {
         if (vm.imageBytes != null) await vm.clearImage();
         await vm.capturePhoto();
         _conversation.setImage(vm.imageBytes!);
-        answer = await _conversation.ask('Describe this image for a visually impaired person.');
+        answer = await _conversation.ask(
+          'Describe this image for a visually impaired person.',
+        );
       } else if (cmd.contains('open gallery')) {
         await vm.selectFromGallery();
         if (vm.imageBytes != null) _conversation.setImage(vm.imageBytes!);
@@ -163,7 +182,10 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
         answer = await _conversation.ask(command);
       }
       if (!mounted) return;
-      setState(() { _description = answer; _status = answer; });
+      setState(() {
+        _description = answer;
+        _status = answer;
+      });
       await _voice.speak(answer);
     } catch (error) {
       debugPrint('Sight AI voice command failed: $error');
@@ -175,12 +197,19 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
   }
 
   Future<void> _stopVoice() async {
-    setState(() { _voiceActive = false; _status = 'Voice stopped'; });
+    setState(() {
+      _voiceActive = false;
+      _status = 'Voice stopped';
+    });
     await _voice.stop();
   }
 
-  Widget _button(String label, IconData icon, VoidCallback? onPressed,
-      String hint) {
+  Widget _button(
+    String label,
+    IconData icon,
+    VoidCallback? onPressed,
+    String hint,
+  ) {
     return Semantics(
       button: true,
       label: label,
@@ -191,8 +220,10 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
         child: ElevatedButton.icon(
           onPressed: onPressed,
           icon: Icon(icon, size: 30),
-          label: Text(label,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          label: Text(
+            label,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
@@ -224,25 +255,43 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(Icons.accessibility_new,
-                      color: Colors.yellow, size: 64),
+                  const Icon(
+                    Icons.accessibility_new,
+                    color: Colors.yellow,
+                    size: 64,
+                  ),
                   const SizedBox(height: 12),
-                  const Text('Sight AI Accessible Camera',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white,
-                          fontSize: 25, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Sight AI Accessible Camera',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   Semantics(
                     liveRegion: true,
-                    child: Text(_status, textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.yellow, fontSize: 19)),
+                    child: Text(
+                      _status,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.yellow,
+                        fontSize: 19,
+                      ),
+                    ),
                   ),
                   if (hasImage) ...[
                     const SizedBox(height: 16),
                     Semantics(
-                      label: 'Selected image preview', image: true,
-                      child: Image.memory(vm.imageBytes!, height: 180,
-                          fit: BoxFit.contain),
+                      label: 'Selected image preview',
+                      image: true,
+                      child: Image.memory(
+                        vm.imageBytes!,
+                        height: 180,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ],
                   if (_working) ...[
@@ -250,45 +299,70 @@ class _BlindModeScreenState extends State<BlindModeScreen> {
                     const Center(child: CircularProgressIndicator()),
                   ],
                   const SizedBox(height: 24),
-                  _button('Start Voice Conversation', Icons.mic,
-                      !_voiceReady || _voiceActive ? null : _startVoice,
-                      'Start spoken questions and automatic follow-up listening'),
+                  _button(
+                    'Start Voice Conversation',
+                    Icons.mic,
+                    !_voiceReady || _voiceActive ? null : _startVoice,
+                    'Start spoken questions and automatic follow-up listening',
+                  ),
                   const SizedBox(height: 12),
-                  _button('Stop Voice Conversation', Icons.mic_off,
-                      _voiceActive ? _stopVoice : null,
-                      'Stop microphone recognition'),
+                  _button(
+                    'Stop Voice Conversation',
+                    Icons.mic_off,
+                    _voiceActive ? _stopVoice : null,
+                    'Stop microphone recognition',
+                  ),
                   const SizedBox(height: 12),
-                  _button('Take Picture', Icons.camera_alt,
-                      disabled || !vm.isInitialized ? null :
-                          () => _perform(_capture),
-                      'Capture an image with the camera'),
+                  _button(
+                    'Take Picture',
+                    Icons.camera_alt,
+                    disabled || !vm.isInitialized
+                        ? null
+                        : () => _perform(_capture),
+                    'Capture an image with the camera',
+                  ),
                   const SizedBox(height: 12),
-                  _button('Choose From Gallery', Icons.photo_library,
-                      disabled ? null : () => _perform(_gallery),
-                      'Select an image from your gallery'),
+                  _button(
+                    'Choose From Gallery',
+                    Icons.photo_library,
+                    disabled ? null : () => _perform(_gallery),
+                    'Select an image from your gallery',
+                  ),
                   const SizedBox(height: 12),
-                  _button('Describe Image', Icons.record_voice_over,
-                      disabled || !hasImage ? null :
-                          () => _perform(_describe),
-                      'Hear a description of the selected image'),
+                  _button(
+                    'Describe Image',
+                    Icons.record_voice_over,
+                    disabled || !hasImage ? null : () => _perform(_describe),
+                    'Hear a description of the selected image',
+                  ),
                   const SizedBox(height: 12),
-                  _button('Repeat Description', Icons.replay,
-                      disabled || _description.isEmpty ? null :
-                          () { _audio.speak(_description); },
-                      'Repeat the most recent description'),
+                  _button(
+                    'Repeat Description',
+                    Icons.replay,
+                    disabled || _description.isEmpty
+                        ? null
+                        : () {
+                            _audio.speak(_description);
+                          },
+                    'Repeat the most recent description',
+                  ),
                   const SizedBox(height: 12),
-                  _button('Stop Speaking', Icons.volume_off,
-                      () { _audio.stop(); },
-                      'Stop spoken feedback'),
+                  _button('Stop Speaking', Icons.volume_off, () {
+                    _audio.stop();
+                  }, 'Stop spoken feedback'),
                   const SizedBox(height: 12),
-                  _button('Choose Again', Icons.refresh,
-                      disabled || !hasImage ? null :
-                          () => _perform(_reset),
-                      'Clear image and restart camera'),
+                  _button(
+                    'Choose Again',
+                    Icons.refresh,
+                    disabled || !hasImage ? null : () => _perform(_reset),
+                    'Clear image and restart camera',
+                  ),
                   if (_description.isNotEmpty) ...[
                     const SizedBox(height: 20),
-                    SelectableText(_description,
-                        style: const TextStyle(color: Colors.white, fontSize: 20)),
+                    SelectableText(
+                      _description,
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    ),
                   ],
                 ],
               ),

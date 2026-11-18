@@ -27,11 +27,13 @@ class ConversationImageService {
     final context = _history.join('\n');
     final response = await model.generateContent([
       Content.multi([
-        TextPart('You are Sight AI, an accessibility assistant. Answer the '
-            'latest question about the attached photo, using prior dialogue '
-            'only to resolve references. Never claim to see beyond the photo. '
-            'If details or text are unclear, say so. Keep answers brief and '
-            'easy to hear.\nPrevious dialogue:\n$context\nUser: $question'),
+        TextPart(
+          'You are Sight AI, an accessibility assistant. Answer the '
+          'latest question about the attached photo, using prior dialogue '
+          'only to resolve references. Never claim to see beyond the photo. '
+          'If details or text are unclear, say so. Keep answers brief and '
+          'easy to hear.\nPrevious dialogue:\n$context\nUser: $question',
+        ),
         InlineDataPart('image/jpeg', bytes),
       ]),
     ]);

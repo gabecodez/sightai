@@ -30,9 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all fields.'),
-        ),
+        const SnackBar(content: Text('Please fill in all fields.')),
       );
       return;
     }
@@ -57,11 +55,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!mounted) return;
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registration successful!'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Registration successful!')));
 
       // Go back to login screen
       Navigator.pop(context);
@@ -71,9 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Account'),
-      ),
+      appBar: AppBar(title: const Text('Create Account')),
 
       body: Consumer<AuthViewModel>(
         builder: (context, authViewModel, child) {
@@ -85,20 +79,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const SizedBox(height: 30),
 
-                const Icon(
-                  Icons.person_add,
-                  size: 80,
-                ),
+                const Icon(Icons.person_add, size: 80),
 
                 const SizedBox(height: 30),
 
                 const Text(
                   'Register for Sight AI',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 30),
@@ -148,25 +136,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Text(
                       authViewModel.errorMessage!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.red,
-                      ),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
 
                 // REGISTER BUTTON
                 ElevatedButton(
-                  onPressed: authViewModel.isLoading
-                      ? null
-                      : _register,
+                  onPressed: authViewModel.isLoading ? null : _register,
 
                   child: authViewModel.isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text('Register'),
                 ),
@@ -180,9 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       : () {
                           Navigator.pop(context);
                         },
-                  child: const Text(
-                    'Already have an account? Login',
-                  ),
+                  child: const Text('Already have an account? Login'),
                 ),
               ],
             ),

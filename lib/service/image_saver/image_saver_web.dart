@@ -8,6 +8,6 @@ Future<String?> saveImage(Uint8List bytes) async {
   html.AnchorElement(href: url)
     ..setAttribute('download', 'captured_image.jpg')
     ..click();
-    
+
   return url;
 }

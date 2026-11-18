@@ -1,14 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sightai/view/delete_account_screen.dart';
 
 void main() {
   group('Sight AI Sprint 4 Tests', () {
-
     // TC-01: Blind Mode has an accessible entry button.
-    testWidgets('TC-01: Blind Mode entry button is available',
-        (WidgetTester tester) async {
+    testWidgets('TC-01: Blind Mode entry button is available', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -25,8 +24,9 @@ void main() {
     });
 
     // TC-02: Image description button starts disabled without an image.
-    testWidgets('TC-02: Describe Image requires an image',
-        (WidgetTester tester) async {
+    testWidgets('TC-02: Describe Image requires an image', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -46,33 +46,25 @@ void main() {
     });
 
     // TC-03: Delete Account screen displays cancellation option.
-    testWidgets('TC-03: Delete Account has a Cancel button',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: DeleteAccountScreen(),
-        ),
-      );
+    testWidgets('TC-03: Delete Account has a Cancel button', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: DeleteAccountScreen()));
 
       expect(find.text('Cancel'), findsOneWidget);
       expect(find.text('Delete Account Permanently'), findsOneWidget);
     });
 
     // TC-04: Delete Account requires password input.
-    testWidgets('TC-04: Password confirmation field exists',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: DeleteAccountScreen(),
-        ),
-      );
+    testWidgets('TC-04: Password confirmation field exists', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MaterialApp(home: DeleteAccountScreen()));
 
       expect(find.text('Confirm your password'), findsOneWidget);
 
       final field = tester.widget<TextField>(find.byType(TextField));
       expect(field.obscureText, isTrue);
     });
-
   });
 }
-

@@ -6,7 +6,6 @@ import 'package:flutter_tts/flutter_tts.dart';
 class BlindModeService {
   final FlutterTts _tts = FlutterTts();
 
-
   Future<void> initialize() async {
     await _tts.setLanguage('en-US');
     await _tts.setSpeechRate(0.45);
