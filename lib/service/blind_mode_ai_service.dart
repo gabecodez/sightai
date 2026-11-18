@@ -9,9 +9,11 @@ class BlindModeAIService {
     );
     final response = await model.generateContent([
       Content.multi([
-        TextPart('Describe this image clearly for a blind or visually impaired '
-            'person. Mention important objects, approximate positions and '
-            'visible text. Be concise and do not guess uncertain details.'),
+        TextPart(
+          'Describe this image clearly for a blind or visually impaired '
+          'person. Mention important objects, approximate positions and '
+          'visible text. Be concise and do not guess uncertain details.',
+        ),
         InlineDataPart('image/jpeg', bytes),
       ]),
     ]);

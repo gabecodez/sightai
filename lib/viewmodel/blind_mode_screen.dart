@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +20,7 @@ class _BlindModeContent extends StatefulWidget {
   const _BlindModeContent();
 
   @override
-  State<_BlindModeContent> createState() =>
-      _BlindModeContentState();
+  State<_BlindModeContent> createState() => _BlindModeContentState();
 }
 
 class _BlindModeContentState extends State<_BlindModeContent> {
@@ -126,35 +124,23 @@ class _BlindModeContentState extends State<_BlindModeContent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.accessibility_new,
-                    size: 70,
-                  ),
+                  const Icon(Icons.accessibility_new, size: 70),
                   const SizedBox(height: 20),
 
                   const Text(
                     'Blind Mode + AI Voice Assistant',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
 
                   const SizedBox(height: 20),
 
-                  Text(
-                    _status,
-                    textAlign: TextAlign.center,
-                  ),
+                  Text(_status, textAlign: TextAlign.center),
 
                   const SizedBox(height: 20),
 
                   if (vm.imageBytes != null)
-                    Image.memory(
-                      vm.imageBytes!,
-                      height: 200,
-                    ),
+                    Image.memory(vm.imageBytes!, height: 200),
 
                   const SizedBox(height: 20),
 
@@ -169,14 +155,10 @@ class _BlindModeContentState extends State<_BlindModeContent> {
                           : 'Start Voice Command',
                     ),
                   ),*/
-
                   const SizedBox(height: 20),
 
                   if (_lastAnswer.isNotEmpty)
-                    Text(
-                      _lastAnswer,
-                      textAlign: TextAlign.center,
-                    ),
+                    Text(_lastAnswer, textAlign: TextAlign.center),
                 ],
               ),
             ),

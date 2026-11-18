@@ -1,8 +1,7 @@
-
-
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 
 import '../repository/camera_repository.dart';
@@ -16,6 +15,19 @@ class CameraViewModel extends ChangeNotifier {
   bool isInitialized = false;
   bool isBusy = false;
   bool _isDisposed = false;
+
+  Uint8List _normalizeImageOrientation(Uint8List bytes) {
+    try {
+      final decoded = img.decodeImage(bytes);
+      if (decoded == null) return bytes;
+
+      final oriented = img.bakeOrientation(decoded);
+      return Uint8List.fromList(img.encodeJpg(oriented, quality: 95));
+    } catch (error) {
+      debugPrint('Image orientation normalization error: $error');
+      return bytes;
+    }
+  }
 
   String? imagePath;
   String? webImageUrl;
@@ -40,8 +52,7 @@ class CameraViewModel extends ChangeNotifier {
 
       controller = _repository.getController();
 
-      if (controller == null ||
-          !controller!.value.isInitialized) {
+      if (controller == null || !controller!.value.isInitialized) {
         throw Exception('Camera initialization failed.');
       }
 
@@ -69,7 +80,7 @@ class CameraViewModel extends ChangeNotifier {
 
     try {
       final XFile photo = await _repository.takePicture();
-      final bytes = await photo.readAsBytes();
+      final bytes = _normalizeImageOrientation(await photo.readAsBytes());
 
       if (_isDisposed) return;
 
@@ -100,13 +111,11 @@ class CameraViewModel extends ChangeNotifier {
     try {
       final picker = ImagePicker();
 
-      final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
-      );
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image == null || _isDisposed) return;
 
-      final bytes = await image.readAsBytes();
+      final bytes = _normalizeImageOrientation(await image.readAsBytes());
 
       if (_isDisposed) return;
 
@@ -143,8 +152,7 @@ class CameraViewModel extends ChangeNotifier {
 
       final newController = _repository.getController();
 
-      if (newController == null ||
-          !newController.value.isInitialized) {
+      if (newController == null || !newController.value.isInitialized) {
         throw Exception('Camera failed to restart.');
       }
 
@@ -174,10 +182,7 @@ class CameraViewModel extends ChangeNotifier {
       throw Exception('Please take or select an image first.');
     }
 
-    final imagePart = InlineDataPart(
-      'image/jpeg',
-      bytes,
-    );
+    final imagePart = InlineDataPart('image/jpeg', bytes);
 
     final model = FirebaseAI.googleAI().generativeModel(
       model: 'gemini-3-flash-preview',
@@ -188,15 +193,10 @@ class CameraViewModel extends ChangeNotifier {
     );
 
     final response = await model.generateContent([
-      Content.multi([
-        prompt,
-        imagePart,
-      ]),
+      Content.multi([prompt, imagePart]),
     ]);
 
-    debugPrint(
-      response.text ?? 'No description generated.',
-    );
+    debugPrint(response.text ?? 'No description generated.');
   }
 
   // CLEANUP
