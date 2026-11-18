@@ -3,11 +3,11 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  file_selector_windows
-  firebase_core
   cloud_firestore
+  file_selector_windows
   firebase_app_check
   firebase_auth
+  firebase_core
   flutter_tts
   speech_to_text_windows
 )

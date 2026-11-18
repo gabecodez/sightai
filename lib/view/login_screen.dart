@@ -29,28 +29,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email and password.'),
-        ),
+        const SnackBar(content: Text('Please enter your email and password.')),
       );
       return;
     }
 
     final authViewModel = context.read<AuthViewModel>();
 
-    final success = await authViewModel.login(
-      email: email,
-      password: password,
-    );
+    final success = await authViewModel.login(email: email, password: password);
 
     if (!mounted) return;
 
     if (success) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const CameraScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const CameraScreen()),
       );
     }
   }
@@ -58,9 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sight AI'),
-      ),
+      appBar: AppBar(title: const Text('Sight AI')),
 
       body: Consumer<AuthViewModel>(
         builder: (context, authViewModel, child) {
@@ -72,20 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 40),
 
-                const Icon(
-                  Icons.visibility,
-                  size: 90,
-                ),
+                const Icon(Icons.visibility, size: 90),
 
                 const SizedBox(height: 20),
 
                 const Text(
                   'Welcome to Sight AI',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 40),
@@ -123,23 +108,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       authViewModel.errorMessage!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.red,
-                      ),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
 
                 // LOGIN BUTTON
                 ElevatedButton(
-                  onPressed:
-                      authViewModel.isLoading ? null : _login,
+                  onPressed: authViewModel.isLoading ? null : _login,
                   child: authViewModel.isLoading
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text('Login'),
                 ),
@@ -156,14 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  const RegisterScreen(),
+                              builder: (_) => const RegisterScreen(),
                             ),
                           );
                         },
-                  child: const Text(
-                    "Don't have an account? Register",
-                  ),
+                  child: const Text("Don't have an account? Register"),
                 ),
               ],
             ),
