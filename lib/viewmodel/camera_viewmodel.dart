@@ -14,6 +14,7 @@ class CameraViewModel extends ChangeNotifier {
 
   bool isInitialized = false;
   bool isBusy = false;
+  bool isSwitchingCamera = false;
   bool _isDisposed = false;
 
   Uint8List _normalizeImageOrientation(Uint8List bytes) {
@@ -32,12 +33,20 @@ class CameraViewModel extends ChangeNotifier {
   String? imagePath;
   String? webImageUrl;
   Uint8List? imageBytes;
+  String? aiDescription;
 
   // Notify listeners safely
   void _update() {
     if (!_isDisposed) {
       notifyListeners();
     }
+  }
+
+  // Update the busy state for camera.
+  void setBusy(bool value) {
+    if (isBusy == value) return;
+    isBusy = value;
+    _update();
   }
 
   // INITIALIZE CAMERA
@@ -65,6 +74,32 @@ class CameraViewModel extends ChangeNotifier {
     }
   }
 
+  // Flip the camera between front and back.
+  Future<void> flipCamera() async {
+    if (isBusy) return;
+
+    isSwitchingCamera = true;
+    _update();
+    try {
+      await _repository.flipCamera();
+
+      if (_isDisposed) return;
+
+      controller = _repository.getController();
+      if (controller == null || !controller!.value.isInitialized) {
+        throw Exception('Camera switching failed.');
+      }
+      isInitialized = true;
+      _update();
+    } catch (error) {
+      debugPrint('Camera flip error: $error');
+      rethrow;
+    } finally {
+      isSwitchingCamera = false;
+      _update();
+    }
+  }
+
   // TAKE PHOTO
   Future<void> capturePhoto() async {
     if (isBusy) return;
@@ -86,6 +121,7 @@ class CameraViewModel extends ChangeNotifier {
 
       imagePath = photo.path;
       imageBytes = bytes;
+      aiDescription = null;
 
       _update();
 
@@ -121,6 +157,7 @@ class CameraViewModel extends ChangeNotifier {
 
       imagePath = image.path;
       imageBytes = bytes;
+      aiDescription = null;
 
       _update();
 
@@ -163,6 +200,7 @@ class CameraViewModel extends ChangeNotifier {
       imagePath = null;
       imageBytes = null;
       webImageUrl = null;
+      aiDescription = null;
 
       _update();
     } catch (e) {
@@ -175,7 +213,7 @@ class CameraViewModel extends ChangeNotifier {
   }
 
   // GENERATE AI DESCRIPTION
-  Future<void> generateDesc() async {
+  Future<String> generateDesc() async {
     final bytes = imageBytes;
 
     if (bytes == null) {
@@ -189,14 +227,23 @@ class CameraViewModel extends ChangeNotifier {
     );
 
     final prompt = TextPart(
-      'Provide a detailed explanation of the attached image.',
+      'Describe what is visible in this image in one concise paragraph. '
+      'Include notable visual details and, when clearly relevant, art style '
+      'or composition. Do not create section headings, numbered lists, or a '
+      'step-by-step breakdown.',
     );
 
     final response = await model.generateContent([
       Content.multi([prompt, imagePart]),
     ]);
 
-    debugPrint(response.text ?? 'No description generated.');
+    final description = response.text?.trim();
+    final safeDescription = (description == null || description.isEmpty)
+        ? 'No description generated.'
+        : description;
+    aiDescription = safeDescription;
+    debugPrint(safeDescription);
+    return safeDescription;
   }
 
   // CLEANUP

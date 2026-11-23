@@ -8,6 +8,10 @@ class CameraRepository {
     await _service.initializeCamera();
   }
 
+  Future<void> flipCamera() async {
+    await _service.flipCamera();
+  }
+
   CameraController? getController() {
     return _service.getCameraController();
   }

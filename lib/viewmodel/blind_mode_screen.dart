@@ -26,9 +26,9 @@ class _BlindModeContent extends StatefulWidget {
 class _BlindModeContentState extends State<_BlindModeContent> {
   final BlindModeService _voice = BlindModeService();
 
-  final bool _listening = false;
-  String _status = 'Voice assistant ready';
-  String _lastAnswer = '';
+  // final bool _listening = false; (currently not used)
+  final String _status = 'Voice assistant ready';
+  final String _lastAnswer = '';
 
   @override
   void initState() {
@@ -90,18 +90,19 @@ class _BlindModeContentState extends State<_BlindModeContent> {
     }
   }*/
 
-  Future<void> _respond(String message) async {
-    debugPrint('Sight AI Response: $message');
+  // note: current not used
+  // Future<void> _respond(String message) async {
+  //   debugPrint('Sight AI Response: $message');
 
-    if (!mounted) return;
+  //   if (!mounted) return;
 
-    setState(() {
-      _lastAnswer = message;
-      _status = 'Ready for next command';
-    });
+  //   setState(() {
+  //     _lastAnswer = message;
+  //     _status = 'Ready for next command';
+  //   });
 
-    await _voice.speak(message);
-  }
+  //   await _voice.speak(message);
+  // }
 
   @override
   void dispose() {

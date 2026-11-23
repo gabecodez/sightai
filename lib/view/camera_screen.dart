@@ -1,7 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../service/wikipedia_service.dart';
 import '../viewmodel/camera_viewmodel.dart';
 import 'blind_mode_screen.dart';
 import 'settings_screen.dart';
@@ -22,6 +24,89 @@ class _CameraScreenState extends State<CameraScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('$prefix: $error')));
+  }
+
+  // Show the image description and matching wiki if available.
+  Future<void> _showDescriptionPopup(
+    BuildContext context,
+    String description,
+  ) async {
+    final wikipediaService = WikipediaService();
+    WikipediaResult? wikipedia;
+    try {
+      wikipedia = await wikipediaService.findForDescription(description);
+    } finally {
+      wikipediaService.dispose();
+    }
+
+    if (!context.mounted) return;
+    final wiki = wikipedia;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        final colorScheme = Theme.of(dialogContext).colorScheme;
+        return AlertDialog(
+          title: const Text('Image description'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(description),
+                if (wiki != null) ...[
+                  const SizedBox(height: 20),
+                  const Divider(),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Wikipedia',
+                    style: Theme.of(dialogContext).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    wiki.title,
+                    style: Theme.of(dialogContext).textTheme.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(wiki.extract),
+                  const SizedBox(height: 10),
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      try {
+                        final launched = await launchUrl(
+                          wiki.articleUrl,
+                          mode: LaunchMode.externalApplication,
+                        );
+                        if (!launched) {
+                          throw Exception(
+                            'Wikipedia link could not be opened.',
+                          );
+                        }
+                      } catch (error) {
+                        if (!mounted) return;
+                        _reportIssue('Could not open Wikipedia', error);
+                      }
+                    },
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    label: const Text('Open Wikipedia'),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              style: FilledButton.styleFrom(
+                foregroundColor: colorScheme.onPrimary,
+              ),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Keeps Blind Mode tied to the same camera view model as the main screen.
@@ -94,7 +179,8 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget _cameraView(BuildContext context) {
     return Consumer<CameraViewModel>(
       builder: (context, vm, child) {
-        if (!vm.isInitialized || vm.controller == null) {
+        if ((!vm.isInitialized || vm.controller == null) &&
+            !vm.isSwitchingCamera) {
           final colorScheme = Theme.of(context).colorScheme;
           return ColoredBox(
             color: colorScheme.surface,
@@ -150,7 +236,13 @@ class _CameraScreenState extends State<CameraScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(27),
                       child: SizedBox.expand(
-                        child: hasImage
+                        child: vm.isSwitchingCamera
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: colorScheme.primary,
+                                ),
+                              )
+                            : hasImage
                             ? Image.memory(
                                 vm.imageBytes!,
                                 fit: BoxFit.cover,
@@ -161,6 +253,50 @@ class _CameraScreenState extends State<CameraScreen> {
                     ),
                   ),
                 ),
+                if (!hasImage)
+                  Positioned(
+                    top: topSpacing + 14,
+                    right: 24,
+                    child: Semantics(
+                      button: true,
+                      label: 'Flip camera',
+                      hint: 'Switch between front and back camera',
+                      child: Material(
+                        color: colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.94,
+                        ),
+                        shape: CircleBorder(
+                          side: BorderSide(
+                            color: colorScheme.outline,
+                            width: 1,
+                          ),
+                        ),
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: vm.isBusy || vm.isSwitchingCamera
+                              ? null
+                              : () async {
+                                  try {
+                                    await vm.flipCamera();
+                                  } catch (error) {
+                                    _reportIssue('Camera switch error', error);
+                                  }
+                                },
+                          child: SizedBox(
+                            width: 48,
+                            height: 48,
+                            child: Icon(
+                              Icons.cameraswitch_rounded,
+                              color: vm.isBusy
+                                  ? colorScheme.onSurface.withValues(alpha: 0.4)
+                                  : colorScheme.onSurface,
+                              size: 26,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 SafeArea(
                   minimum: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                   child: Align(
@@ -214,7 +350,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         const Spacer(),
                         Semantics(
                           button: true,
-                          label: 'Open Blind Mode',
+                          label: 'Open Accessibility Mode',
                           hint: 'Uses large controls and spoken assistance',
                           child: Container(
                             decoration: BoxDecoration(
@@ -246,7 +382,7 @@ class _CameraScreenState extends State<CameraScreen> {
                                       ),
                                       SizedBox(width: 8),
                                       Text(
-                                        'Blind Mode',
+                                        'High Contrast Mode',
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w800,
@@ -481,18 +617,15 @@ class _CameraScreenState extends State<CameraScreen> {
               onPressed: vm.isBusy
                   ? null
                   : () async {
+                      vm.setBusy(true);
                       try {
-                        await vm.generateDesc();
+                        final description = await vm.generateDesc();
                         if (!mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'AI description generated. Check console.',
-                            ),
-                          ),
-                        );
+                        await _showDescriptionPopup(context, description);
                       } catch (error) {
                         _reportIssue('AI error', error);
+                      } finally {
+                        vm.setBusy(false);
                       }
                     },
               style: FilledButton.styleFrom(
@@ -504,10 +637,19 @@ class _CameraScreenState extends State<CameraScreen> {
                   borderRadius: BorderRadius.circular(18),
                 ),
               ),
-              icon: const Icon(Icons.auto_awesome_rounded),
-              label: const Text(
-                'Describe',
-                style: TextStyle(fontWeight: FontWeight.w800),
+              icon: vm.isBusy
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    )
+                  : const Icon(Icons.auto_awesome_rounded),
+              label: Text(
+                vm.isBusy ? 'Analyzing...' : 'Describe',
+                style: const TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
           ),
