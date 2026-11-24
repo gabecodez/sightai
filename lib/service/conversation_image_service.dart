@@ -22,7 +22,7 @@ class ConversationImageService {
       return 'Please take a picture first.';
     }
     final model = FirebaseAI.googleAI().generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash-lite',
     );
     final context = _history.join('\n');
     final response = await model.generateContent([

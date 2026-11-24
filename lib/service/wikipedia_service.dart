@@ -30,7 +30,7 @@ class WikipediaService {
   Future<String?> _identifySubject(String description) async {
     try {
       final model = FirebaseAI.googleAI().generativeModel(
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.5-flash-lite',
       );
       final response = await model.generateContent([
         Content.text(

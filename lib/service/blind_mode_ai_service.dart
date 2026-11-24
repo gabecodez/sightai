@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 class BlindModeAIService {
   Future<String> describe(Uint8List bytes) async {
     final model = FirebaseAI.googleAI().generativeModel(
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash-lite',
     );
     final response = await model.generateContent([
       Content.multi([
