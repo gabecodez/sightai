@@ -223,7 +223,7 @@ class CameraViewModel extends ChangeNotifier {
     final imagePart = InlineDataPart('image/jpeg', bytes);
 
     final model = FirebaseAI.googleAI().generativeModel(
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.5-flash',
     );
 
     final prompt = TextPart(

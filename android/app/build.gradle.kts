@@ -30,7 +30,7 @@ android {
         applicationId = "dev.sightai.sightai"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
+        versionCode = 6
         versionName = flutter.versionName
     }
 
